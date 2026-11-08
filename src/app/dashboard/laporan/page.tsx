@@ -57,6 +57,16 @@ export default async function Laporan({ searchParams }: { searchParams: Promise<
         <a href={`/dashboard/laporan/export?${qs}`} className="tombol-garis">Unduh Excel</a>
       </form>
 
+      <section className="tanpa-cetak kartu flex flex-wrap items-center gap-3">
+        <h2 className="mr-auto font-bold">Cetak dokumen</h2>
+        <a href={`/dashboard/cetak/transaksi?dari=${dari}&sampai=${sampai}`} className="tombol">
+          Cetak transaksi {dari} s.d. {sampai}
+        </a>
+        <a href={`/dashboard/cetak/tunggakan${p.kelas ? `?kelas=${p.kelas}` : ""}`} className="tombol">
+          Cetak data tunggakan
+        </a>
+      </section>
+
       <section className="kartu overflow-x-auto">
         <h2 className="mb-3 font-bold">Penerimaan {dari} s.d. {sampai}</h2>
         <table className="tabel">

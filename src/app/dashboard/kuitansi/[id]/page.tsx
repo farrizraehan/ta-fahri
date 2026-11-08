@@ -6,7 +6,7 @@ import { wajib } from "@/lib/auth";
 import { validasi } from "@/lib/validasi";
 import { qrSvg, urlCek } from "@/lib/qr";
 import { rupiah, tanggalJam, terbilang } from "@/lib/format";
-import { TombolCetak } from "./tombol-cetak";
+import { TombolCetak } from "@/components/tombol-cetak";
 import { batalkan } from "../../transaksi/actions";
 
 export const dynamic = "force-dynamic";

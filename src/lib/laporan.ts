@@ -49,3 +49,40 @@ export async function rekapTunggakan(kelasId?: number) {
     .sort((a, b) => a.kelas.localeCompare(b.kelas) || a.nama.localeCompare(b.nama));
   return { biaya: biaya ?? [], baris };
 }
+
+/** Nama bendahara dan kepala madrasah aktif untuk kolom tanda tangan. */
+export async function namaPejabat() {
+  const { data } = await db().from("profil").select("nama, peran").eq("aktif", true).in("peran", ["bendahara", "kepala"]).order("dibuat");
+  return {
+    bendahara: data?.find((p) => p.peran === "bendahara")?.nama,
+    kepala: data?.find((p) => p.peran === "kepala")?.nama,
+  };
+}
+
+export type FilterTransaksi = { dari: string; sampai: string; metode?: string; q?: string };
+
+/** Transaksi pada rentang tanggal (WIB), terbaru dulu kecuali urut=naik. */
+export async function ambilTransaksi(f: FilterTransaksi, urut: "naik" | "turun" = "turun") {
+  let q = db()
+    .from("transaksi")
+    .select("id, no_kuitansi, jumlah, waktu, metode, petugas_nama, dibatalkan, hash_sha512, siswa(nama, nisn, kelas(nama)), tagihan(semester, jenis_biaya(nama))")
+    .gte("waktu", new Date(`${f.dari}T00:00:00+07:00`).toISOString())
+    .lte("waktu", new Date(`${f.sampai}T23:59:59+07:00`).toISOString())
+    .order("waktu", { ascending: urut === "naik" })
+    .limit(5000);
+  if (f.metode) q = q.eq("metode", f.metode);
+  if (f.q) q = q.ilike("no_kuitansi", `%${f.q.replace(/[^A-Za-z0-9-]/g, "")}%`);
+  const { data } = await q;
+  return (data ?? []).map((t) => {
+    const s = t.siswa as unknown as { nama: string; nisn: string | null; kelas: { nama: string } | null };
+    const tg = t.tagihan as unknown as { semester: string | null; jenis_biaya: { nama: string } };
+    return {
+      ...t,
+      jumlah: Number(t.jumlah),
+      siswaNama: s.nama,
+      nisn: s.nisn,
+      kelas: s.kelas?.nama ?? "-",
+      pembayaran: `${tg.jenis_biaya.nama}${tg.semester ? ` (${tg.semester})` : ""}`,
+    };
+  });
+}

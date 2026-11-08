@@ -47,6 +47,12 @@ export default async function DaftarTransaksi({ searchParams }: { searchParams: 
           <input id="q" name="q" defaultValue={p.q ?? ""} className="isian" />
         </div>
         <button className="tombol">Tampilkan</button>
+        <Link
+          href={`/dashboard/cetak/transaksi?${new URLSearchParams({ dari, sampai, ...(p.metode ? { metode: p.metode } : {}) })}`}
+          className="tombol-garis"
+        >
+          Cetak transaksi
+        </Link>
       </form>
       <div className="kartu overflow-x-auto">
         <p className="mb-2 text-sm">

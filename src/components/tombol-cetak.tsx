@@ -3,7 +3,7 @@
 export function TombolCetak() {
   return (
     <button className="tombol" onClick={() => window.print()}>
-      Cetak kuitansi
+      Cetak
     </button>
   );
 }
