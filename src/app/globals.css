@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  --hijau: #14532d;
+  --hijau-muda: #dcfce7;
+  --emas: #ca8a04;
+  --kertas: #f8faf7;
+  --tinta: #1c2620;
+  --garis: #d9e2db;
+}
+
+body {
+  background: var(--kertas);
+  color: var(--tinta);
+  font-family: ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer components {
+  .kartu {
+    @apply rounded-xl border bg-white p-5 shadow-sm;
+    border-color: var(--garis);
+  }
+  .tombol {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white transition disabled:opacity-50;
+    background: var(--hijau);
+  }
+  .tombol:hover {
+    filter: brightness(1.15);
+  }
+  .tombol-garis {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border bg-white px-4 py-2 text-sm font-semibold transition hover:bg-gray-50;
+    border-color: var(--garis);
+    color: var(--hijau);
+  }
+  .tombol-bahaya {
+    @apply inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-700 hover:bg-red-100;
+  }
+  .isian {
+    @apply w-full rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-700/30;
+    border-color: var(--garis);
+  }
+  .label {
+    @apply mb-1 block text-xs font-semibold tracking-wide text-gray-600 uppercase;
+  }
+  .tabel {
+    @apply w-full text-sm;
+  }
+  .tabel th {
+    @apply border-b px-3 py-2 text-left text-xs font-semibold tracking-wide text-gray-500 uppercase;
+    border-color: var(--garis);
+  }
+  .tabel td {
+    @apply border-b px-3 py-2 align-top;
+    border-color: var(--garis);
+  }
+  .lencana {
+    @apply inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+  .judul {
+    @apply text-2xl font-bold;
+    color: var(--hijau);
+  }
+}
+
+@media print {
+  .tanpa-cetak {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+}
