@@ -13,6 +13,7 @@ const MENU: { href: string; label: string; peran: Peran[] }[] = [
   { href: "/dashboard/tagihan", label: "Buat Tagihan", peran: ["admin", "bendahara"] },
   { href: "/dashboard/biaya", label: "Jenis Biaya", peran: ["admin"] },
   { href: "/dashboard/impor", label: "Impor Siswa", peran: ["admin"] },
+  { href: "/dashboard/akun-siswa", label: "Akun Wali", peran: ["admin"] },
   { href: "/dashboard/pengguna", label: "Pengguna", peran: ["admin"] },
 ];
 

@@ -43,3 +43,20 @@ export async function hapusTagihan(form: FormData) {
   if (!count) await db().from("tagihan").delete().eq("id", id);
   revalidatePath("/dashboard/siswa/[id]", "page");
 }
+
+/** Admin membuat/mereset akun satu siswa. Kata sandi baru dikembalikan sekali untuk diberikan ke wali. */
+export async function resetAkunSiswa(_: unknown, form: FormData) {
+  await wajib("admin");
+  const { hashSandi, sandiAcak } = await import("@/lib/sandi");
+  const siswaId = String(form.get("siswa_id"));
+  const sandi = sandiAcak();
+  const { error } = await db()
+    .from("akun_siswa")
+    .upsert(
+      { siswa_id: siswaId, sandi_hash: hashSandi(sandi), wajib_ganti: true, aktif: true, gagal: 0, kunci_sampai: null, diperbarui: new Date().toISOString() },
+      { onConflict: "siswa_id" },
+    );
+  if (error) return { galat: error.message };
+  revalidatePath(`/dashboard/siswa/${siswaId}`);
+  return { sandi };
+}

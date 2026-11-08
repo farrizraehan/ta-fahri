@@ -6,6 +6,7 @@ import { hitungTagihan, labelStatus } from "@/lib/tagihan";
 import { rupiah, tanggal, tanggalJam } from "@/lib/format";
 import { aturPotongan, hapusTagihan } from "../actions";
 import { FormBayar } from "./form-bayar";
+import { AkunWali } from "./akun-wali";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +14,7 @@ export default async function DetailSiswa({ params }: { params: Promise<{ id: st
   const u = await wajib();
   const { id } = await params;
   const sb = db();
-  const { data: s } = await sb.from("siswa").select("*, kelas(nama)").eq("id", id).maybeSingle();
+  const { data: s } = await sb.from("siswa").select("*, kelas(nama), akun_siswa(siswa_id, wajib_ganti)").eq("id", id).maybeSingle();
   if (!s) notFound();
   const [{ data: tagihan }, { data: trx }] = await Promise.all([
     sb
@@ -46,6 +47,12 @@ export default async function DetailSiswa({ params }: { params: Promise<{ id: st
         <p>Wali: <b>{s.nama_wali ?? "-"}</b></p>
         <p>HP wali: <b>{s.hp_wali ?? "-"}</b></p>
         <p>Tahun masuk: <b>{s.tahun_masuk ?? "-"}</b></p>
+        <div className="flex flex-wrap items-center gap-2 sm:col-span-3">
+          <span>
+            Akun wali: <b>{s.akun_siswa ? (s.akun_siswa.wajib_ganti ? "ada, belum ganti sandi" : "aktif") : "belum ada"}</b>
+          </span>
+          {u.peran === "admin" && <AkunWali siswaId={s.id} punya={!!s.akun_siswa} />}
+        </div>
       </div>
 
       <section className="kartu overflow-x-auto">

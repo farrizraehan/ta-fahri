@@ -14,7 +14,7 @@ export default async function HalamanBayar() {
       <div className="text-center">
         <Image src="/logo.png" alt="Logo" width={72} height={72} className="mx-auto" />
         <h1 className="judul mt-3">Pembayaran Online</h1>
-        <p className="text-sm text-gray-600">Untuk wali siswa MTs Al Riyadhul Janah. Bayar lewat transfer bank, QRIS, atau e-wallet.</p>
+        <p className="text-sm text-gray-600">Untuk wali siswa MTs Al Riyadhul Janah. Masuk dengan akun dari madrasah, lalu bayar lewat transfer bank, QRIS, atau e-wallet.</p>
       </div>
       <FormWali />
       <Link href="/" className="text-center text-sm text-gray-500 hover:underline">

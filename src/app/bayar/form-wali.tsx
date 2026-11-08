@@ -12,12 +12,13 @@ export function FormWali() {
         <input id="nisn" name="nisn" inputMode="numeric" required className="isian" autoComplete="off" />
       </div>
       <div>
-        <label className="label" htmlFor="lahir">Tanggal lahir siswa</label>
-        <input id="lahir" name="lahir" type="date" required className="isian" />
+        <label className="label" htmlFor="sandi">Kata sandi</label>
+        <input id="sandi" name="sandi" type="password" required className="isian" autoComplete="current-password" />
       </div>
       {state?.galat && <p className="text-sm text-red-700">{state.galat}</p>}
+      <p className="text-xs text-gray-500">Kata sandi awal tercantum di kartu akun dari madrasah. Lupa kata sandi? Hubungi TU.</p>
       <button className="tombol w-full" disabled={proses}>
-        {proses ? "Memeriksa…" : "Lihat tagihan"}
+        {proses ? "Memeriksa…" : "Masuk"}
       </button>
     </form>
   );

@@ -9,10 +9,14 @@ import { PilihBayar } from "./pilih-bayar";
 
 export const dynamic = "force-dynamic";
 
-export default async function TagihanWali() {
+export default async function TagihanWali({ searchParams }: { searchParams: Promise<{ sandi?: string }> }) {
   const siswaId = await sesiWali();
   if (!siswaId) redirect("/bayar");
+  const { sandi } = await searchParams;
   const sb = db();
+  // kata sandi awal wajib diganti sebelum bisa melihat tagihan
+  const { data: akun } = await sb.from("akun_siswa").select("wajib_ganti").eq("siswa_id", siswaId).maybeSingle();
+  if (akun?.wajib_ganti) redirect("/bayar/ganti-sandi");
   const [{ data: siswa }, { data: tagihan }, { data: riwayat }, { data: pending }] = await Promise.all([
     sb.from("siswa").select("nama, nis, nisn, kelas(nama)").eq("id", siswaId).single(),
     sb
@@ -46,10 +50,17 @@ export default async function TagihanWali() {
             Kelas {kelas ?? "-"} · NISN {siswa?.nisn ?? "-"}
           </p>
         </div>
-        <form action={keluarWali}>
-          <button className="tombol-garis">Keluar</button>
-        </form>
+        <div className="flex flex-col items-end gap-1">
+          <form action={keluarWali}>
+            <button className="tombol-garis">Keluar</button>
+          </form>
+          <Link href="/bayar/ganti-sandi" className="text-xs text-gray-500 underline">
+            Ganti kata sandi
+          </Link>
+        </div>
       </div>
+
+      {sandi === "diganti" && <p className="rounded-lg bg-green-50 p-3 text-sm text-green-800">Kata sandi berhasil diganti.</p>}
 
       {!!pending?.length && (
         <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
