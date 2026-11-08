@@ -2,7 +2,7 @@ import Link from "next/link";
 import { db } from "@/lib/supabase";
 import { wajib } from "@/lib/auth";
 import { hitungTagihan } from "@/lib/tagihan";
-import { hariIni, rupiah, tanggalJam } from "@/lib/format";
+import { hariIni, jamLalu, rupiah, tanggalJam } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +20,8 @@ export default async function Ringkasan({ searchParams }: { searchParams: Promis
       .select("id, no_kuitansi, jumlah, waktu, metode, dibatalkan, siswa(nama)")
       .order("waktu", { ascending: false })
       .limit(8),
-    sb.from("log_notifikasi").select("id", { count: "exact", head: true }).eq("signature_valid", false),
+    // peringatan hanya untuk penolakan 24 jam terakhir; riwayat lengkap ada di menu Log Midtrans
+    sb.from("log_notifikasi").select("id", { count: "exact", head: true }).eq("signature_valid", false).gte("waktu", jamLalu(24)),
   ]);
 
   let total = 0,
@@ -51,7 +52,7 @@ export default async function Ringkasan({ searchParams }: { searchParams: Promis
       {galat === "akses" && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">Anda tidak punya akses ke halaman itu.</p>}
       {!!notifPalsu && (
         <Link href="/dashboard/midtrans" className="block rounded-lg bg-red-50 p-3 text-sm text-red-700">
-          ⚠ {notifPalsu} notifikasi pembayaran dengan signature SHA-512 tidak valid telah ditolak. Lihat log.
+          ⚠ {notifPalsu} notifikasi pembayaran dengan signature SHA-512 tidak valid ditolak dalam 24 jam terakhir. Lihat log.
         </Link>
       )}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

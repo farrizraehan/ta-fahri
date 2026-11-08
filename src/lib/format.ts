@@ -46,3 +46,6 @@ export function samarkanNama(nama: string) {
     .map((k, i) => (i === 0 ? k : `${k[0]}***`))
     .join(" ");
 }
+
+/** Waktu ISO n jam yang lalu. */
+export const jamLalu = (n: number) => new Date(Date.now() - n * 3_600_000).toISOString();
